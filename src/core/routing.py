@@ -2,6 +2,8 @@ import importlib
 
 from fastapi import APIRouter, FastAPI
 
+from core.utils import get_default_parameters_values
+
 splitter = ':'
 
 
@@ -13,9 +15,7 @@ def import_from_app_urls(app: str, key: str = 'urlpatterns', default=None):
 
 def get_router(app: str, *extra_keys):
     if extra_keys is None or len(extra_keys) == 0:
-        extra_keys = (
-            ('prefix', ''),
-        )
+        extra_keys = tuple(get_default_parameters_values(APIRouter.__init__))
     router_kwargs = {}
     for extra_key in extra_keys:
         assert isinstance(extra_key, (str, tuple))
