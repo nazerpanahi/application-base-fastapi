@@ -3,7 +3,7 @@ from typing import Dict
 
 from fastapi import APIRouter
 
-from core.utils import import_from_app_urls
+from core.utils import import_from_app
 from core.utils import get_default_parameters_values
 from config.app_settings import SRC_DIR
 
@@ -44,10 +44,10 @@ class Application:
         else:
             router_kwargs = {}
             for key, default in get_default_parameters_values(APIRouter.__init__):
-                config = import_from_app_urls(app=self.name, key=key, default=default)
+                config = import_from_app(path=f"{self.name}.{self.urls_module}", key=key, default=default)
                 router_kwargs[key] = config
                 del key, default
-            urlpatterns = import_from_app_urls(app=self.name, key='urlpatterns')
+            urlpatterns = import_from_app(path=f"{self.name}.{self.urls_module}", key='urlpatterns')
             assert isinstance(urlpatterns, list), 'urlpatterns must be a list of dictionaries'
             router = APIRouter(**router_kwargs)
             for pattern in urlpatterns:

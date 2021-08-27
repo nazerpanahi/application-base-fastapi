@@ -2,9 +2,9 @@ import importlib
 import inspect
 
 
-def import_from_app_urls(app: str, key: str = 'urlpatterns', default=None):
-    urls = importlib.import_module(f'{app}.urls')
-    value = getattr(urls, key, default)
+def import_from_app(path: str, key: str, default=None):
+    mod = importlib.import_module(f'{path}')
+    value = getattr(mod, key, default)
     return value
 
 def get_default_parameters_values(func):
