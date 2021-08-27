@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from config import settings, AppConstants
-from core.application import Application
+from core.utils import import_from_app
 
 http.cookies._is_legal_key = lambda _: True
 app = FastAPI(
@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 for reg_app in settings.REGISTERED_APPLICATIONS:
-    application = Application(reg_app)
+    application = import_from_app(f'{reg_app}.app', 'application')
     app.include_router(router=application.application_router)
 
 if settings.DEBUG:

@@ -83,20 +83,14 @@ class Application:
         if not cls.app_exists(name=name):
             os.mkdir(path)
             with open(path + '/__init__.py', 'w') as f:
-                f.write('')
+                f.write("")
             with open(path + '/urls.py', 'w') as f:
-                f.write('''from typing import List, Dict, Any
-
-prefix = ''
-
-urlpatterns: List[Dict[str, Any]] = [
-    # {
-    #    'methods': ['GET'],
-    #    'path': '/',
-    #    'endpoint': ,
-    # },
-]
-''')
+                f.write("from typing import List, Dict, Any\n\nprefix = ''\n\nurlpatterns: List[Dict[str, Any]] ="
+                        " [\n\t# {\n\t#    'methods': ['GET'],\n\t#    'path': '/',\n\t#    'endpoint': ,\n\t# },"
+                        "\n]\n".expandtabs(4))
+            with open(path + '/app.py', 'w') as f:
+                f.write("from core.application import Application\n\n\n"
+                        f"application = Application('{name}')\n".expandtabs(4))
             return True
         else:
             return False
@@ -105,3 +99,5 @@ urlpatterns: List[Dict[str, Any]] = [
     def app_exists(cls, name: str):
         path = SRC_DIR + f'/{name}'
         return os.path.exists(path)
+
+Application.create_app('testapp')
