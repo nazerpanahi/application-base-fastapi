@@ -5,7 +5,6 @@ prefix = '/v2'
 
 urlpatterns: List[Dict] = [
     {
-        'type': 'api_route',
         'methods': ['GET'],
         'path': '/ping',
         'endpoint': router_ping,
