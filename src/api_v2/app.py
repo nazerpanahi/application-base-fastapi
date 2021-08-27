@@ -1,4 +1,4 @@
 from core.application import Application
 
-
-application = Application('api_v2')
+app_name = 'api_v2'
+application = Application(app_name)

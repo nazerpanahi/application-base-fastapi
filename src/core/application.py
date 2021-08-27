@@ -89,8 +89,8 @@ class Application:
                         " [\n\t# {\n\t#    'methods': ['GET'],\n\t#    'path': '/',\n\t#    'endpoint': ,\n\t# },"
                         "\n]\n".expandtabs(4))
             with open(path + '/app.py', 'w') as f:
-                f.write("from core.application import Application\n\n\n"
-                        f"application = Application('{name}')\n".expandtabs(4))
+                f.write(f"from core.application import Application\n\napp_name = '{name}'\n"
+                        f"application = Application(app_name)\n".expandtabs(4))
             return True
         else:
             return False
