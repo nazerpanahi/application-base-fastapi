@@ -2,6 +2,8 @@ import importlib
 
 from fastapi import APIRouter, FastAPI
 
+splitter = ':'
+
 
 def import_from_app_urls(app: str, key: str = 'urlpatterns', default=None):
     urls = importlib.import_module(f'{app}.urls')
@@ -32,8 +34,9 @@ def get_router(app: str, *extra_keys):
         pattern_type = 'api_route' if 'endpoint' in pattern.keys() and 'path' in pattern.keys() \
             else 'router' if 'router' in pattern.keys() else None
         if pattern_type == 'api_route':
-            pattern.update({'name': f"{app}.{pattern.get('name', pattern.get('endpoint').__name__)}".strip('.')})
-            router.add_api_route(**pattern)
+            name = f"{app}{splitter}{pattern.get('name', pattern.get('endpoint').__name__)}".strip('.')
+            new_pattern = dict(list(filter(lambda item: item[0] != 'name', pattern.items())))
+            router.add_api_route(name=name, **new_pattern)
         elif pattern_type == 'router':
             pattern_router = pattern.get('router')
             if isinstance(pattern_router, str):
