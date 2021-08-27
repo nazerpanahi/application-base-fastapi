@@ -1,5 +1,11 @@
+import importlib
 import inspect
 
+
+def import_from_app_urls(app: str, key: str = 'urlpatterns', default=None):
+    urls = importlib.import_module(f'{app}.urls')
+    value = getattr(urls, key, default)
+    return value
 
 def get_default_parameters_values(func):
     params = list()
