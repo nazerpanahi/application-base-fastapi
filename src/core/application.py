@@ -19,6 +19,10 @@ class ApplicationHolder:
     def get(cls, app_name: str):
         return cls.__applications.get(app_name)
 
+    @classmethod
+    def exists(cls, app_name: str):
+        return app_name in cls.__applications.keys()
+
 
 class Application:
     splitter = ':'
@@ -27,8 +31,11 @@ class Application:
 
     def __init__(self, name):
         self.name = name
-        self.Holder.put(self)
-        self.__router = None
+        if not self.Holder.exists(app_name=name):
+            self.Holder.put(self)
+            self.__router = None
+        else:
+            self.__router = self.Holder.get(name).__router
 
     @property
     def application_router(self):
