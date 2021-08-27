@@ -28,9 +28,10 @@ def get_router(app: str, *extra_keys):
         del key, default
     del extra_key
     urlpatterns = import_from_app_urls(app=app, key='urlpatterns')
+    assert isinstance(urlpatterns, list), 'urlpatterns must be a list of dictionaries'
     router = APIRouter(**router_kwargs)
     for pattern in urlpatterns:
-        assert isinstance(pattern, dict), 'url pattern must be a dictionary.'
+        assert isinstance(pattern, dict), 'urlpattern must be a dictionary'
         pattern_type = 'api_route' if 'endpoint' in pattern.keys() and 'path' in pattern.keys() \
             else 'router' if 'router' in pattern.keys() else None
         if pattern_type == 'api_route':
