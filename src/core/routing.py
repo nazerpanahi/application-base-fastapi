@@ -1,6 +1,6 @@
 import importlib
 
-from fastapi import APIRouter
+from fastapi import APIRouter, FastAPI
 
 
 def import_from_app_urls(app: str, key: str = 'urlpatterns', default=None):
@@ -44,3 +44,7 @@ def get_router(app: str, *extra_keys):
         del pattern_type
     del pattern
     return router
+
+
+def reverse(app: FastAPI, name: str, **path_params: str):
+    return app.url_path_for(name=name, **path_params)
