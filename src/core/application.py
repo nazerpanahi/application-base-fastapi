@@ -86,7 +86,8 @@ class Application:
                 f.write("")
             with open(path + '/urls.py', 'w') as f:
                 f.write("from typing import List, Dict, Any\n\nprefix = ''\n\nurlpatterns: List[Dict[str, Any]] ="
-                        " [\n\t# {\n\t#    'methods': ['GET'],\n\t#    'path': '/',\n\t#    'endpoint': ,\n\t# },"
+                        " [\n\t# {\n\t#    'methods': ['GET'],\n\t#    'path': '/',\n\t#    'endpoint': index,\n\t# },"
+                        "\n\t# {\n\t#    'router': 'other_application',\n\t# },"
                         "\n]\n".expandtabs(4))
             with open(path + '/app.py', 'w') as f:
                 f.write(f"from core.application import Application\n\napp_name = '{name}'\n"
