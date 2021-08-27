@@ -52,3 +52,9 @@ def get_router(app: str, *extra_keys):
 
 def reverse(app: FastAPI, name: str, **path_params: str):
     return app.url_path_for(name=name, **path_params)
+
+
+def reverse2(name: str, **path_params: str):
+    app_name, *name_parts = name.split(splitter)
+    router = get_router(app=app_name)
+    return router.url_path_for(name=name, **path_params)
