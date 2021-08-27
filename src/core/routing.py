@@ -32,6 +32,7 @@ def get_router(app: str, *extra_keys):
         pattern_type = 'api_route' if 'endpoint' in pattern.keys() and 'path' in pattern.keys() \
             else 'router' if 'router' in pattern.keys() else None
         if pattern_type == 'api_route':
+            pattern.update({'name': f"{app}.{pattern.get('name', pattern.get('endpoint').__name__)}".strip('.')})
             router.add_api_route(**pattern)
         elif pattern_type == 'router':
             pattern_router = pattern.get('router')
