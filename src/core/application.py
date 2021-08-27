@@ -99,5 +99,3 @@ class Application:
     def app_exists(cls, name: str):
         path = SRC_DIR + f'/{name}'
         return os.path.exists(path)
-
-Application.create_app('testapp')
