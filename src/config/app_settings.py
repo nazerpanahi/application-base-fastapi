@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     REGISTERED_APPLICATIONS: List[str] = [
         'api',
+        'app_management'
     ]
     CORS_ORIGINS: List[str] = None
 
