@@ -98,6 +98,34 @@ Now you can run `src/app.py` and see `demo_app` is added.
     - Otherwise, if you want to define a new route for current application, you should pass `fastapi.routing.APIRoute`
       keyword arguments dictionary as the `urlpattern` dictionary.
 
+- Name Mangling: All route names will be replaced by `{application}:{route_name}`. For example consider route `/ping`
+  that is located in the `demo_app` application with the name of `ping`. After name mangling, name of route `ping` will
+  be replaced by `demo_app:ping`.
+
+- Reverse: Returns an url path.
+
+```python
+from core.application import Application
+
+path = Application.reverse(route_name='demo_app:ping') # /demo/ping
+```
+
+- Resolve: The resolve function can be used for resolving URL paths to the corresponding endpoints.
+
+```python
+from core.application import Application
+from starlette.routing import Match
+
+match, endpoint, path_params = Application.resolve(app_name='demo', path='/demo/ping', method='GET')
+if match == Match.FULL:
+    # call corresponding endpoint function
+    endpoint(**path_params)
+elif match == Match.PARTIAL:
+    # methods are not match (http 405 code)
+    # call corresponding endpoint function
+    endpoint(**path_params)
+```
+
 ## Examples
 
 We add three demo application named `api`, `api_v1`, and `api_v2`.

@@ -1,11 +1,13 @@
 import os
-from typing import Dict
+from typing import Dict, Tuple, Callable, Optional, Pattern
 
 from fastapi import APIRouter
+from starlette.convertors import Convertor
+from starlette.routing import Match, compile_path
 
-from core.utils import import_from_app
-from core.utils import get_default_parameters_values
 from config.app_settings import SRC_DIR
+from core.utils import get_default_parameters_values
+from core.utils import import_from_app
 
 
 class ApplicationHolder:
@@ -72,10 +74,43 @@ class Application:
             return router
 
     @classmethod
-    def reverse(cls, name: str, **path_params: str):
-        app_name, *name_parts = name.split(cls.splitter)
+    def compile_path(cls, path: str) -> Tuple[Pattern, str, Dict[str, Convertor]]:
+        path_regex, path_format, path_convertors = compile_path(path=path)
+        return path_regex, path_format, path_convertors
+
+    @classmethod
+    def reverse(cls, route_name: str, **path_params: str):
+        route_name, *name_parts = route_name.split(cls.splitter)
+        router = cls.Holder.get(route_name).application_router
+        return router.url_path_for(name=route_name, **path_params)
+
+    @classmethod
+    def resolve(cls, app_name: str, path: str, method: str = 'GET') -> Tuple[Match, Optional[Callable], Optional[Dict]]:
+        # starlette.routing.Router.__call__
+        scope: dict = {
+            'type': 'http',
+            'method': method,
+            'path': path
+        }
+        app_name, *name_parts = app_name.split(cls.splitter)
         router = cls.Holder.get(app_name).application_router
-        return router.url_path_for(name=name, **path_params)
+        match: Match = Match.NONE
+        endpoint: Optional[Callable] = None
+        path_params: Optional[Dict] = None
+        for route in router.routes:
+            match, child_scope = route.matches(scope)
+            if match == Match.FULL:
+                match = Match.FULL
+                endpoint = child_scope.get('endpoint')
+                path_params = child_scope.get('path_params')
+                break
+            elif match == Match.PARTIAL:
+                match = Match.PARTIAL
+                endpoint = child_scope.get('endpoint')
+                path_params = child_scope.get('path_params')
+            else:
+                continue
+        return match, endpoint, path_params
 
     @classmethod
     def create_app(cls, name: str):
