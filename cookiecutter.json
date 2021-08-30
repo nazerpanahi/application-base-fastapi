@@ -1,0 +1,8 @@
+{
+  "project_name": "Application based FastAPI",
+  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "short_description": "Write modular and reusable applications with fastapi easily.",
+  "swagger_title": "{{ cookiecutter.project_name.lower().title() }}",
+  "swagger_description": "{{ cookiecutter.short_description }}",
+  "version": "0.1.0"
+}
